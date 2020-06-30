@@ -1,14 +1,14 @@
-require 'json'
-require 'set'
-require_relative '../app'
+require "json"
+require "set"
+require_relative "../app"
 
-$common_maps = []#(11..16).to_a, (21..25).to_a, (31..35).to_a, (41..45).to_a, (51..55).to_a, (61..65).to_a, (71..72).to_a].flatten
-$event_maps = [(461..466).to_a].flatten
+$common_maps = [] #(11..16).to_a, (21..25).to_a, (31..35).to_a, (41..45).to_a, (51..55).to_a, (61..65).to_a, (71..72).to_a].flatten
+$event_maps = [481, 482, 483, 484]
 
 def staticify_drop_map(map_id)
   levels = map_id > 100 ? [4, 3, 2, 1] : [0]
-  table = map_id > 100 ? DropRecordAutumn2019 : DropRecord
-  table_name = map_id > 100 ? "drop_records_autumn2019" : "drop_records"
+  table = map_id > 100 ? DropRecordSummer2020 : DropRecord
+  table_name = map_id > 100 ? "drop_records_summer2020" : "drop_records"
   levels.each do |level_no|
     KanColleConstant.map[map_id][:cells].each do |cell|
       query_result = {}
@@ -16,20 +16,20 @@ def staticify_drop_map(map_id)
         json_obj = {
           totalCount: 0,
           generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-          data: {}
+          data: {},
         }
-        
-        enemy_total_count = (table.find_by_sql ["SELECT enemy, SUM(count) AS count FROM #{table_name} WHERE map = ? AND cell = ANY(ARRAY[?]) AND level = ? AND rank = ? GROUP BY enemy", map_id, cell[:index], level_no, rank]).reduce({}) {|h, i| h[i.enemy] = i.count; h}
-        json_obj[:totalCount] = enemy_total_count.reduce(0) {|sum, i| sum += i[1]}
+
+        enemy_total_count = (table.find_by_sql ["SELECT enemy, SUM(count) AS count FROM #{table_name} WHERE map = ? AND cell = ANY(ARRAY[?]) AND level = ? AND rank = ? GROUP BY enemy", map_id, cell[:index], level_no, rank]).reduce({}) { |h, i| h[i.enemy] = i.count; h }
+        json_obj[:totalCount] = enemy_total_count.reduce(0) { |sum, i| sum += i[1] }
         enemy_total_count2 = {}
         enemy_total_count.each do |k, v|
           if v.to_f / json_obj[:totalCount] < 0.01
             enemy_total_count.delete(k)
             json_obj[:totalCount] -= v
           end
-          idx = k.split(',')
-          e = (idx[0..-2].map {|i| i == '-1' ? nil : "#{ConstData.ship[i.to_i]["name"]}(#{i})"}).compact
-          e_name = "#{e.join('/')}(#{KanColleConstant.formation[idx[-1].to_i]})"
+          idx = k.split(",")
+          e = (idx[0..-2].map { |i| i == "-1" ? nil : "#{ConstData.ship[i.to_i]["name"]}(#{i})" }).compact
+          e_name = "#{e.join("/")}(#{KanColleConstant.formation[idx[-1].to_i]})"
           enemy_total_count2[e_name] ||= 0
           enemy_total_count2[e_name] += v
         end
@@ -39,37 +39,37 @@ def staticify_drop_map(map_id)
           map: map_id,
           cell: cell[:index],
           level: level_no,
-          rank: rank
+          rank: rank,
         ).select(:ship).distinct.map(&:ship).each do |ship_id|
           data_obj = {
             enemy: {},
             hqLv: [],
             rate: 0,
-            totalCount: 0
+            totalCount: 0,
           }
           enemy_count = table.find_by_sql ["SELECT enemy, SUM(count) AS count FROM #{table_name} WHERE map = ? AND cell = ANY(ARRAY[?]) AND level = ? AND rank = ? AND ship = ? GROUP BY enemy", map_id, cell[:index], level_no, rank, ship_id]
           enemy_count.each do |q|
-            idx = q.enemy.split(',')
-            e = (idx[0..-2].map {|i| i == '-1' ? nil : "#{ConstData.ship[i.to_i]["name"]}(#{i})"}).compact
-            e_name = "#{e.join('/')}(#{KanColleConstant.formation[idx[-1].to_i]})"
+            idx = q.enemy.split(",")
+            e = (idx[0..-2].map { |i| i == "-1" ? nil : "#{ConstData.ship[i.to_i]["name"]}(#{i})" }).compact
+            e_name = "#{e.join("/")}(#{KanColleConstant.formation[idx[-1].to_i]})"
             next if enemy_total_count[e_name].nil?
             data_obj[:enemy][e_name] ||= {
               count: 0,
-              rate: 0
+              rate: 0,
             }
             data_obj[:enemy][e_name][:count] += q.count
             data_obj[:enemy][e_name][:rate] += (data_obj[:enemy][e_name][:count] * 100.0 / enemy_total_count[e_name]).round(3)
           end
           hq_lv = (table.find_by_sql ["SELECT min(hq_lv), max(hq_lv) FROM (SELECT DISTINCT CAST(json_object_keys(hq_lv) AS INTEGER) AS hq_lv FROM #{table_name} WHERE map = ? AND cell = ANY(ARRAY[?]) AND level = ? AND rank = ? AND ship = ?) AS hq", map_id, cell[:index], level_no, rank, ship_id]).first
           data_obj[:hqLv] = [hq_lv.min, hq_lv.max]
-          data_obj[:totalCount] = data_obj[:enemy].reduce(0) {|sum, i| sum += i[1][:count]}
+          data_obj[:totalCount] = data_obj[:enemy].reduce(0) { |sum, i| sum += i[1][:count] }
           data_obj[:rate] = (data_obj[:totalCount] * 100.0 / json_obj[:totalCount]).round(3)
 
           json_obj[:data][ConstData.ship[ship_id]["name"]] = data_obj if data_obj[:totalCount] > 0
         end
 
         Sinatra::KVDataHelper.set_kv_data("drop_map_#{map_id}_#{cell[:point]}#{level_no > 0 ? "-#{level_no}" : ""}-#{rank}", json_obj.to_json)
-        
+
         query_result[rank] = json_obj
         query_result[rank][:enemyCount] = enemy_total_count
       end
@@ -78,10 +78,10 @@ def staticify_drop_map(map_id)
       json_obj = {
         totalCount: query_result[:S][:totalCount] + query_result[:A][:totalCount],
         generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-        data: {} 
+        data: {},
       }
 
-      enemy_total_count = query_result[:S][:enemyCount].merge(query_result[:A][:enemyCount]) {|k, v1, v2| v1 + v2}
+      enemy_total_count = query_result[:S][:enemyCount].merge(query_result[:A][:enemyCount]) { |k, v1, v2| v1 + v2 }
 
       query_result[:S][:data].each do |ship, value|
         json_obj[:data][ship] = {
@@ -89,12 +89,12 @@ def staticify_drop_map(map_id)
           totalCount: value[:totalCount],
           hqLv: value[:hqLv],
           rate: (value[:totalCount] * 100.0 / json_obj[:totalCount]).round(3),
-          enemy: {}
+          enemy: {},
         }
         value[:enemy].each do |k, v|
           json_obj[:data][ship][:enemy][k] = {
             count: [v[:count], 0],
-            rate: (v[:count] * 100.0 / enemy_total_count[k]).round(3)
+            rate: (v[:count] * 100.0 / enemy_total_count[k]).round(3),
           }
         end
       end
@@ -105,7 +105,7 @@ def staticify_drop_map(map_id)
           totalCount: 0,
           hqLv: value[:hqLv],
           rate: 0,
-          enemy: {}
+          enemy: {},
         }
         data_obj[:rankCount][1] = value[:totalCount]
         data_obj[:totalCount] += value[:totalCount]
@@ -120,7 +120,7 @@ def staticify_drop_map(map_id)
         value[:enemy].each do |k, v|
           data_obj[:enemy][k] ||= {
             count: [0, 0],
-            rate: 0
+            rate: 0,
           }
           data_obj[:enemy][k][:count][1] = v[:count]
           data_obj[:enemy][k][:rate] = (data_obj[:enemy][k][:count].reduce(&:+) * 100.0 / enemy_total_count[k]).round(3)
@@ -135,11 +135,11 @@ def staticify_drop_map(map_id)
       json_obj = {
         totalCount: query_result[:S][:totalCount] + query_result[:A][:totalCount] + query_result[:B][:totalCount],
         generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-        data: {} 
+        data: {},
       }
 
-      enemy_total_count = query_result[:S][:enemyCount].merge(query_result[:A][:enemyCount]) {|k, v1, v2| v1 + v2}
-      enemy_total_count = enemy_total_count.merge(query_result[:B][:enemyCount]) {|k, v1, v2| v1 + v2}
+      enemy_total_count = query_result[:S][:enemyCount].merge(query_result[:A][:enemyCount]) { |k, v1, v2| v1 + v2 }
+      enemy_total_count = enemy_total_count.merge(query_result[:B][:enemyCount]) { |k, v1, v2| v1 + v2 }
 
       query_result[:S][:data].each do |ship, value|
         json_obj[:data][ship] = {
@@ -147,12 +147,12 @@ def staticify_drop_map(map_id)
           totalCount: value[:totalCount],
           hqLv: value[:hqLv],
           rate: (value[:totalCount] * 100.0 / json_obj[:totalCount]).round(3),
-          enemy: {}
+          enemy: {},
         }
         value[:enemy].each do |k, v|
           json_obj[:data][ship][:enemy][k] = {
             count: [v[:count], 0, 0],
-            rate: (v[:count] * 100.0 / enemy_total_count[k]).round(3)
+            rate: (v[:count] * 100.0 / enemy_total_count[k]).round(3),
           }
         end
       end
@@ -163,7 +163,7 @@ def staticify_drop_map(map_id)
           totalCount: 0,
           hqLv: value[:hqLv],
           rate: 0,
-          enemy: {}
+          enemy: {},
         }
         data_obj[:rankCount][1] = value[:totalCount]
         data_obj[:totalCount] += value[:totalCount]
@@ -178,7 +178,7 @@ def staticify_drop_map(map_id)
         value[:enemy].each do |k, v|
           data_obj[:enemy][k] ||= {
             count: [0, 0, 0],
-            rate: 0
+            rate: 0,
           }
           data_obj[:enemy][k][:count][1] = v[:count]
           data_obj[:enemy][k][:rate] = (data_obj[:enemy][k][:count].reduce(&:+) * 100.0 / enemy_total_count[k]).round(3)
@@ -193,7 +193,7 @@ def staticify_drop_map(map_id)
           totalCount: 0,
           hqLv: value[:hqLv],
           rate: 0,
-          enemy: {}
+          enemy: {},
         }
         data_obj[:rankCount][2] = value[:totalCount]
         data_obj[:totalCount] += value[:totalCount]
@@ -208,7 +208,7 @@ def staticify_drop_map(map_id)
         value[:enemy].each do |k, v|
           data_obj[:enemy][k] ||= {
             count: [0, 0, 0],
-            rate: 0
+            rate: 0,
           }
           data_obj[:enemy][k][:count][2] = v[:count]
           data_obj[:enemy][k][:rate] = (data_obj[:enemy][k][:count].reduce(&:+) * 100.0 / enemy_total_count[k]).round(3)
@@ -223,10 +223,10 @@ def staticify_drop_map(map_id)
 end
 
 def staticify_drop_ship()
-  table = [DropRecord, DropRecordAutumn2019]
-  table_name = ["drop_records", "drop_records_autumn2019"]
+  table = [DropRecord, DropRecordSummer2020]
+  table_name = ["drop_records", "drop_records_summer2020"]
 
-  ['S', 'A', 'B', 'SA', 'SAB'].each do |rank|
+  ["S", "A", "B", "SA", "SAB"].each do |rank|
     drop_map_data = {}
     [$common_maps, $event_maps].flatten.each do |map|
       levels = map > 100 ? [4, 3, 2, 1] : [0]
@@ -250,7 +250,7 @@ def staticify_drop_ship()
       json_obj = {
         totalCount: 0,
         generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-        data: {}
+        data: {},
       }
 
       drop_map_data.each do |map_name, drop_data|
@@ -262,14 +262,14 @@ def staticify_drop_ship()
           json_obj[:data][map_name] ||= {
             hqLv: drop_data["data"][ship]["hqLv"],
             totalCount: drop_data["data"][ship]["totalCount"],
-            rate: drop_data["data"][ship]["rate"]
+            rate: drop_data["data"][ship]["rate"],
           }
         else
           json_obj[:data][map_name] ||= {
             hqLv: drop_data["data"][ship]["hqLv"],
             totalCount: drop_data["data"][ship]["totalCount"],
             rankCount: drop_data["data"][ship]["rankCount"],
-            rate: drop_data["data"][ship]["rate"]
+            rate: drop_data["data"][ship]["rate"],
           }
         end
       end

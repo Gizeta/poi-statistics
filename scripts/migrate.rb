@@ -1,9 +1,9 @@
-require 'psych'
-require 'mongoid'
-require 'pathname'
-require 'base64'
-require 'parallel'
-require 'sinatra/activerecord'
+require "psych"
+require "mongoid"
+require "pathname"
+require "base64"
+require "parallel"
+require "sinatra/activerecord"
 
 path = Pathname.new(File.dirname(__FILE__)).realpath.parent
 
@@ -15,12 +15,11 @@ Mongoid.logger.level = Logger::INFO
 Mongo::Logger.logger.level = Logger::INFO
 
 migrate_range = {
-  from: Time.new(2019, 10, 29, 0, 0, 0),
-  to: Time.now
+  from: Time.new(2020, 03, 01, 0, 0, 0),
+  to: Time.now,
 }
 
-
-  map_func = %Q{
+map_func = %Q{
     function() {
       if (!this.enemyFormation || !this.enemyShips1 || !this.enemyShips2 || !this.baseExp) return;
       var enemyShips = this.enemyShips1.concat(this.enemyShips2);
@@ -49,7 +48,7 @@ migrate_range = {
     }
   }
 
-  reduce_func = %Q{
+reduce_func = %Q{
     function(key, values) {
       var reduced = {
         enemy: {}
@@ -75,112 +74,113 @@ migrate_range = {
     }
   }
 
-  pool = {map: [],name: 'test'}
-  pool[:map].each do |map_id|
-    KanColleConstant.map[map_id][:cells].each do |cell_obj|
-      cell_obj[:index].each do |cell_id|
-        ['S', 'A', 'B', 'C', 'D', 'E'].each do |rank|
-          DropShipRecord.where(
-            :id.gte     => BSON::ObjectId.from_time(migrate_range[:from]),
-            :id.lt      => BSON::ObjectId.from_time(migrate_range[:to]),
-            :mapId      => map_id,
-            :quest      => KanColleConstant.map[map_id][:name],
-            :cellId     => cell_id,
-            :enemy      => cell_obj[:name],
-            :rank       => rank)
-            .map_reduce(map_func, reduce_func)
-            .out(inline: 1).each do |query|
-              Parallel.each(query['value']['enemy'], :in_threads => 4) do |enemy|
-                fleet = enemy[0].split('/').map(&:to_i)
-                stat = DropShipStatistic.find_or_create_by(
-                  name: pool[:name],
-                  ship_id: query['_id'].to_i,
-                  map_id: map_id,
-                  cell_id: cell_id,
-                  point_id: cell_obj[:point],
-                  level_no: 0,
-                  hour_no: 0,
-                  minute_no: 0,
-                  rank: rank,
-                  enemy_fleet: fleet[0..-2],
-                  enemy_formation: fleet.last,
-                  baseExp: enemy[1]['baseExp'])
-                stat.from_time = Time.now if stat.from_time.nil?
-                stat.to_time = Time.now
-                stat.count += enemy[1]['count'].to_i
-                enemy[1]['hqCount'].each do |k, v|
-                  stat.hq_count[k] ||= 0
-                  stat.hq_count[k] += v.to_i
-                end
-                enemy[1]['originCount'].each do |k, v|
-                  stat.origin_count[Base64.encode64(k)] ||= 0
-                  stat.origin_count[Base64.encode64(k)] += v.to_i
-                end
-                stat.save
-              end
+pool = { map: [], name: "test" }
+pool[:map].each do |map_id|
+  KanColleConstant.map[map_id][:cells].each do |cell_obj|
+    cell_obj[:index].each do |cell_id|
+      ["S", "A", "B", "C", "D", "E"].each do |rank|
+        DropShipRecord.where(
+          :id.gte => BSON::ObjectId.from_time(migrate_range[:from]),
+          :id.lt => BSON::ObjectId.from_time(migrate_range[:to]),
+          :mapId => map_id,
+          :quest => KanColleConstant.map[map_id][:name],
+          :cellId => cell_id,
+          :enemy => cell_obj[:name],
+          :rank => rank,
+        )
+          .map_reduce(map_func, reduce_func)
+          .out(inline: 1).each do |query|
+          Parallel.each(query["value"]["enemy"], :in_threads => 4) do |enemy|
+            fleet = enemy[0].split("/").map(&:to_i)
+            stat = DropShipStatistic.find_or_create_by(
+              name: pool[:name],
+              ship_id: query["_id"].to_i,
+              map_id: map_id,
+              cell_id: cell_id,
+              point_id: cell_obj[:point],
+              level_no: 0,
+              hour_no: 0,
+              minute_no: 0,
+              rank: rank,
+              enemy_fleet: fleet[0..-2],
+              enemy_formation: fleet.last,
+              baseExp: enemy[1]["baseExp"],
+            )
+            stat.from_time = Time.now if stat.from_time.nil?
+            stat.to_time = Time.now
+            stat.count += enemy[1]["count"].to_i
+            enemy[1]["hqCount"].each do |k, v|
+              stat.hq_count[k] ||= 0
+              stat.hq_count[k] += v.to_i
             end
-        end
-      end
-      puts "#{map_id}-#{cell_obj[:point]}"
-    end
-  end
-
-  # event
-  pool = {map: [465,466], name: 't'}
-  pool[:map].each do |map_id|
-    KanColleConstant.map[map_id][:cells].each do |cell_obj|
-      cell_obj[:index].each do |cell_id|
-        ['S', 'A', 'B', 'C', 'D', 'E'].each do |rank|
-          (1..4).to_a.each do |level_no|
-            next if map_id > 200 && level_no == 0
-            next if map_id < 200 && level_no > 0
-
-            DropShipRecord.where(
-              :id.gte     => BSON::ObjectId.from_time(migrate_range[:from]),
-              :id.lt      => BSON::ObjectId.from_time(migrate_range[:to]),
-              :mapId      => map_id,
-              :quest      => KanColleConstant.map[map_id][:name],
-              :cellId     => cell_id,
-              #:enemy      => cell_obj[:name],
-              :mapLv      => level_no,
-              :rank       => rank)
-              .map_reduce(map_func, reduce_func)
-              .out(inline: 1).each do |query|
-
-                Parallel.each(query['value']['enemy'], :in_threads => 4) do |enemy|
-                  fleet = enemy[0].split('/').map(&:to_i)
-                  stat = DropShipStatistic.find_or_create_by(
-                    name: pool[:name],
-                    ship_id: query['_id'].to_i,
-                    map_id: map_id,
-                    cell_id: cell_id,
-                    point_id: cell_obj[:point],
-                    level_no: level_no,
-                    hour_no: 0,
-                    minute_no: 0,
-                    rank: rank,
-                    enemy_fleet: fleet[0..-2],
-                    enemy_formation: fleet.last,
-                    baseExp: enemy[1]['baseExp'])
-                  stat.from_time = Time.now if stat.from_time.nil?
-                  stat.to_time = Time.now
-                  stat.count += enemy[1]['count'].to_i
-                  enemy[1]['hqCount'].each do |k, v|
-                    stat.hq_count[k] ||= 0
-                    stat.hq_count[k] += v.to_i
-                  end
-                  enemy[1]['originCount'].each do |k, v|
-                    stat.origin_count[Base64.encode64(k)] ||= 0
-                    stat.origin_count[Base64.encode64(k)] += v.to_i
-                  end
-                  stat.save
-                end
-              end
+            enemy[1]["originCount"].each do |k, v|
+              stat.origin_count[Base64.encode64(k)] ||= 0
+              stat.origin_count[Base64.encode64(k)] += v.to_i
+            end
+            stat.save
           end
         end
       end
-      puts "#{map_id}-#{cell_obj[:point]}"
     end
+    puts "#{map_id}-#{cell_obj[:point]}"
   end
+end
 
+# event
+pool = { map: [481, 482, 483, 484], name: "t" }
+pool[:map].each do |map_id|
+  KanColleConstant.map[map_id][:cells].each do |cell_obj|
+    cell_obj[:index].each do |cell_id|
+      ["S", "A", "B", "C", "D", "E"].each do |rank|
+        (1..4).to_a.each do |level_no|
+          next if map_id > 200 && level_no == 0
+          next if map_id < 200 && level_no > 0
 
+          DropShipRecord.where(
+            :id.gte => BSON::ObjectId.from_time(migrate_range[:from]),
+            :id.lt => BSON::ObjectId.from_time(migrate_range[:to]),
+            :mapId => map_id,
+            :quest => KanColleConstant.map[map_id][:name],
+            :cellId => cell_id,
+            #:enemy      => cell_obj[:name],
+            :mapLv => level_no,
+            :rank => rank,
+          )
+            .map_reduce(map_func, reduce_func)
+            .out(inline: 1).each do |query|
+            Parallel.each(query["value"]["enemy"], :in_threads => 4) do |enemy|
+              fleet = enemy[0].split("/").map(&:to_i)
+              stat = DropShipStatistic.find_or_create_by(
+                name: pool[:name],
+                ship_id: query["_id"].to_i,
+                map_id: map_id,
+                cell_id: cell_id,
+                point_id: cell_obj[:point],
+                level_no: level_no,
+                hour_no: 0,
+                minute_no: 0,
+                rank: rank,
+                enemy_fleet: fleet[0..-2],
+                enemy_formation: fleet.last,
+                baseExp: enemy[1]["baseExp"],
+              )
+              stat.from_time = Time.now if stat.from_time.nil?
+              stat.to_time = Time.now
+              stat.count += enemy[1]["count"].to_i
+              enemy[1]["hqCount"].each do |k, v|
+                stat.hq_count[k] ||= 0
+                stat.hq_count[k] += v.to_i
+              end
+              enemy[1]["originCount"].each do |k, v|
+                stat.origin_count[Base64.encode64(k)] ||= 0
+                stat.origin_count[Base64.encode64(k)] += v.to_i
+              end
+              stat.save
+            end
+          end
+        end
+      end
+    end
+    puts "#{map_id}-#{cell_obj[:point]}"
+  end
+end

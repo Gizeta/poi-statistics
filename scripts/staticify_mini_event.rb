@@ -1,5 +1,5 @@
-require_relative '../app'
-require 'json'
+require_relative "../app"
+require "json"
 
 def item(id, evt_name, start_time, end_time)
   map = %Q{
@@ -22,68 +22,52 @@ def item(id, evt_name, start_time, end_time)
   DropShipRecord.where(
     :id.gte => BSON::ObjectId.from_time(start_time),
     :id.lte => BSON::ObjectId.from_time(end_time),
-    :rank => 'S',
+    :rank => "S",
     :itemId => id,
     :origin => /^(?!Kca)/, # temporarily filter Kcanotify
   ).map_reduce(map, reduce).out(inline: 1).each do |q|
-    map_id, cell_id = q["_id"].split('-').map(&:to_i)
-    cell = KanColleConstant.map[map_id][:cells].find{|c| c[:index].include? cell_id}
+    map_id, cell_id = q["_id"].split("-").map(&:to_i)
+    cell = KanColleConstant.map[map_id][:cells].find { |c| c[:index].include? cell_id }
     if cell.nil?
       p "#{map_id}/#{cell_id}"
       next
     end
-    if map_id == 33 && cell_id == 3
-      next
-    end
-    if map_id == 14 && cell_id == 5
-      next
-    end
-    if map_id == 14 && cell_id == 14
-      next
-    end
     cell_name = "#{map_id / 10}-#{map_id % 10}-#{cell[:point]}#{cell[:boss] ? "(Boss)" : ""}"
-    data_S[cell_name] ||= {count: 0, total: 0}
+    data_S[cell_name] ||= { count: 0, total: 0 }
     data_S[cell_name][:count] += q["value"].to_i
     data_S[cell_name][:total] += DropShipRecord.where(
       :id.gte => BSON::ObjectId.from_time(start_time),
       :id.lte => BSON::ObjectId.from_time(end_time),
       :mapId => map_id,
       :cellId => cell_id,
-      :rank => 'S').count
+      :rank => "S",
+    ).count
   end
-  
+
   data_A = {}
   DropShipRecord.where(
     :id.gte => BSON::ObjectId.from_time(start_time),
     :id.lte => BSON::ObjectId.from_time(end_time),
-    :rank => 'A',
+    :rank => "A",
     :itemId => id,
     :origin => /^(?!Kca)/, # temporarily filter Kcanotify
   ).map_reduce(map, reduce).out(inline: 1).each do |q|
-    map_id, cell_id = q["_id"].split('-').map(&:to_i)
-    cell = KanColleConstant.map[map_id][:cells].find{|c| c[:index].include? cell_id}
+    map_id, cell_id = q["_id"].split("-").map(&:to_i)
+    cell = KanColleConstant.map[map_id][:cells].find { |c| c[:index].include? cell_id }
     if cell.nil?
       p "#{map_id}/#{cell_id}"
       next
     end
-    if map_id == 33 && cell_id == 3
-      next
-    end
-    if map_id == 14 && cell_id == 5
-      next
-    end
-    if map_id == 14 && cell_id == 14
-      next
-    end
     cell_name = "#{map_id / 10}-#{map_id % 10}-#{cell[:point]}#{cell[:boss] ? "(Boss)" : ""}"
-    data_A[cell_name] ||= {count: 0, total: 0}
+    data_A[cell_name] ||= { count: 0, total: 0 }
     data_A[cell_name][:count] += q["value"].to_i
     data_A[cell_name][:total] += DropShipRecord.where(
       :id.gte => BSON::ObjectId.from_time(start_time),
       :id.lte => BSON::ObjectId.from_time(end_time),
       :mapId => map_id,
       :cellId => cell_id,
-      :rank => 'A').count
+      :rank => "A",
+    ).count
   end
 
   data = {}
@@ -92,7 +76,7 @@ def item(id, evt_name, start_time, end_time)
       s_count: drop_data[:count],
       s_total: drop_data[:total],
       a_count: 0,
-      a_total: 0
+      a_total: 0,
     }
   end
   data_A.each do |map_name, drop_data|
@@ -100,7 +84,7 @@ def item(id, evt_name, start_time, end_time)
       s_count: 0,
       s_total: 0,
       a_count: 0,
-      a_total: 0
+      a_total: 0,
     }
     data[map_name][:a_count] += drop_data[:count]
     data[map_name][:a_total] += drop_data[:total]
@@ -134,48 +118,50 @@ def ship(id, evt_name, start_time, end_time)
   DropShipRecord.where(
     :id.gte => BSON::ObjectId.from_time(start_time),
     :id.lte => BSON::ObjectId.from_time(end_time),
-    :rank => 'S',
-    :shipId => id
+    :rank => "S",
+    :shipId => id,
   ).map_reduce(map, reduce).out(inline: 1).each do |q|
-    map_id, cell_id = q["_id"].split('-').map(&:to_i)
-    cell = KanColleConstant.map[map_id][:cells].find{|c| c[:index].include? cell_id}
+    map_id, cell_id = q["_id"].split("-").map(&:to_i)
+    cell = KanColleConstant.map[map_id][:cells].find { |c| c[:index].include? cell_id }
     if cell.nil?
       p "#{map_id}/#{cell_id}"
       next
     end
     cell_name = "#{map_id / 10}-#{map_id % 10}-#{cell[:point]}#{cell[:boss] ? "(Boss)" : ""}"
-    data_S[cell_name] ||= {count: 0, total: 0}
+    data_S[cell_name] ||= { count: 0, total: 0 }
     data_S[cell_name][:count] += q["value"].to_i
     data_S[cell_name][:total] += DropShipRecord.where(
       :id.gte => BSON::ObjectId.from_time(start_time),
       :id.lte => BSON::ObjectId.from_time(end_time),
       :mapId => map_id,
       :cellId => cell_id,
-      :rank => 'S').count
+      :rank => "S",
+    ).count
   end
-  
+
   data_A = {}
   DropShipRecord.where(
     :id.gte => BSON::ObjectId.from_time(start_time),
     :id.lte => BSON::ObjectId.from_time(end_time),
-    :rank => 'A',
-    :shipId => id
+    :rank => "A",
+    :shipId => id,
   ).map_reduce(map, reduce).out(inline: 1).each do |q|
-    map_id, cell_id = q["_id"].split('-').map(&:to_i)
-    cell = KanColleConstant.map[map_id][:cells].find{|c| c[:index].include? cell_id}
+    map_id, cell_id = q["_id"].split("-").map(&:to_i)
+    cell = KanColleConstant.map[map_id][:cells].find { |c| c[:index].include? cell_id }
     if cell.nil?
       p "#{map_id}/#{cell_id}"
       next
     end
     cell_name = "#{map_id / 10}-#{map_id % 10}-#{cell[:point]}#{cell[:boss] ? "(Boss)" : ""}"
-    data_A[cell_name] ||= {count: 0, total: 0}
+    data_A[cell_name] ||= { count: 0, total: 0 }
     data_A[cell_name][:count] += q["value"].to_i
     data_A[cell_name][:total] += DropShipRecord.where(
       :id.gte => BSON::ObjectId.from_time(start_time),
       :id.lte => BSON::ObjectId.from_time(end_time),
       :mapId => map_id,
       :cellId => cell_id,
-      :rank => 'A').count
+      :rank => "A",
+    ).count
   end
 
   data = {}
@@ -184,7 +170,7 @@ def ship(id, evt_name, start_time, end_time)
       s_count: drop_data[:count],
       s_total: drop_data[:total],
       a_count: 0,
-      a_total: 0
+      a_total: 0,
     }
   end
   data_A.each do |map_name, drop_data|
@@ -192,7 +178,7 @@ def ship(id, evt_name, start_time, end_time)
       s_count: 0,
       s_total: 0,
       a_count: 0,
-      a_total: 0
+      a_total: 0,
     }
     data[map_name][:a_count] += drop_data[:count]
     data[map_name][:a_total] += drop_data[:total]
@@ -224,9 +210,9 @@ def merge(key, *arr)
   Sinatra::KVDataHelper.set_kv_data(key, data.to_json)
 end
 
-[68, 93].each do |id|
-  item(id, "sanma2019", Time.new(2019, 10, 25, 12, 0, 0), Time.now)
-end
-[517, 518, 524, 525, 531, 552, 565, 584, 585].each do |id|
-  ship(id, "sanma2019", Time.new(2019, 10, 25, 12, 0, 0), Time.now)
+# [68, 93].each do |id|
+#   item(id, "sanma2019", Time.new(2019, 10, 25, 12, 0, 0), Time.now)
+# end
+[596, 544, 561, 613].each do |id|
+  ship(id, "20200520", Time.new(2020, 5, 20, 10, 0, 0), Time.now)
 end

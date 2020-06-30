@@ -19,8 +19,10 @@
         %li{:class => locals[:location] == "drop" ? "active" : nil}
           %a{:href => "/drop/"} 掉落统计
         %li{:class => ["dropdown", locals[:location] == "event" ? "active" : nil]}
-          %a{:href => "/event-sanma2019/"} 活动限定统计(2019年秋刀鱼活动)
+          %a{:href => "/event-20200520/"} 活动限定统计(20200520限定)
           %ul.dropdown-menu
+            %li
+              %a{:href => "/event-sanma2019/"} 2019年秋刀鱼活动
             %li
               %a{:href => "/event-sanma2018/"} 2018年秋刀鱼祭典
             %li

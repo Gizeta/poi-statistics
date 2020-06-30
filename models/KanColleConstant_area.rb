@@ -112,7 +112,17 @@ class KanColleConstant
       :name => "進撃！第二次作戦「南方作戦」",
       :maps => [461, 462, 463, 464, 465, 466],
       :event => true,
-    }
+    },
+    47 => {
+      :name => "桃の節句！沖に立つ波",
+      :maps => [471],
+      :event => true,
+    },
+    48 => {
+      :name => "侵攻阻止！島嶼防衛強化作戦",
+      :maps => [481, 482, 483, 484],
+      :event => true,
+    },
   }
 
   def self.area

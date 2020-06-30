@@ -1,0 +1,84 @@
+%div.container
+  %div.page-header
+    %h1 
+  %div.panel.panel-primary
+    %div.panel-heading
+      %h4.panel-title 弗莱彻
+    %div.panel-body
+      %table.table.table-striped.table-hover{:style => "text-align:center;"}
+        %thead
+          %tr
+            %td 海域点
+            %td S胜掉落次数
+            %td S胜掉落率
+            %td A胜掉落次数
+            %td A胜掉落率
+        %tbody
+          - ship596_data.sort{|a, b| b[1]["s_count"] * 100000 / (b[1]["s_total"]+0.00001) <=> a[1]["s_count"] * 100000 / (a[1]["s_total"]+0.00001)}.each do |d|
+            %tr
+              %td= d[0]
+              %td= d[1]["s_count"]
+              %td= "#{(d[1]["s_count"] * 100.0 / d[1]["s_total"]).round(3)}%"
+              %td= d[1]["a_count"]
+              %td= "#{d[1]["a_total"] > 0 ? (d[1]["a_count"] * 100.0 / d[1]["a_total"]).round(3) : 0}%"
+  %div.panel.panel-primary
+    %div.panel-heading
+      %h4.panel-title 珀斯
+    %div.panel-body
+      %table.table.table-striped.table-hover{:style => "text-align:center;"}
+        %thead
+          %tr
+            %td 海域点
+            %td S胜掉落次数
+            %td S胜掉落率
+            %td A胜掉落次数
+            %td A胜掉落率
+        %tbody
+          - ship613_data.sort{|a, b| b[1]["s_count"] * 100000 / (b[1]["s_total"]+0.00001) <=> a[1]["s_count"] * 100000 / (a[1]["s_total"]+0.00001)}.each do |d|
+            %tr
+              %td= d[0]
+              %td= d[1]["s_count"]
+              %td= "#{(d[1]["s_count"] * 100.0 / d[1]["s_total"]).round(3)}%"
+              %td= d[1]["a_count"]
+              %td= "#{d[1]["a_total"] > 0 ? (d[1]["a_count"] * 100.0 / d[1]["a_total"]).round(3) : 0}%"
+  %div.panel.panel-primary
+    %div.panel-heading
+      %h4.panel-title 塞缪尔·B·罗伯茨
+    %div.panel-body
+      %table.table.table-striped.table-hover{:style => "text-align:center;"}
+        %thead
+          %tr
+            %td 海域点
+            %td S胜掉落次数
+            %td S胜掉落率
+            %td A胜掉落次数
+            %td A胜掉落率
+        %tbody
+          - ship561_data.sort{|a, b| b[1]["s_count"] * 100000 / (b[1]["s_total"]+0.00001) <=> a[1]["s_count"] * 100000 / (a[1]["s_total"]+0.00001)}.each do |d|
+            %tr
+              %td= d[0]
+              %td= d[1]["s_count"]
+              %td= "#{(d[1]["s_count"] * 100.0 / d[1]["s_total"]).round(3)}%"
+              %td= d[1]["a_count"]
+              %td= "#{d[1]["a_total"] > 0 ? (d[1]["a_count"] * 100.0 / d[1]["a_total"]).round(3) : 0}%"
+  %div.panel.panel-primary
+    %div.panel-heading
+      %h4.panel-title 甘比尔湾
+    %div.panel-body
+      %table.table.table-striped.table-hover{:style => "text-align:center;"}
+        %thead
+          %tr
+            %td 海域点
+            %td S胜掉落次数
+            %td S胜掉落率
+            %td A胜掉落次数
+            %td A胜掉落率
+        %tbody
+          - ship544_data.sort{|a, b| b[1]["s_count"] * 100000 / (b[1]["s_total"]+0.00001) <=> a[1]["s_count"] * 100000 / (a[1]["s_total"]+0.00001)}.each do |d|
+            %tr
+              %td= d[0]
+              %td= d[1]["s_count"]
+              %td= "#{(d[1]["s_count"] * 100.0 / d[1]["s_total"]).round(3)}%"
+              %td= d[1]["a_count"]
+              %td= "#{d[1]["a_total"] > 0 ? (d[1]["a_count"] * 100.0 / d[1]["a_total"]).round(3) : 0}%"
+=haml :disqus, :locals => { :key => "event-20200520/index" }
