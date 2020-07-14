@@ -8511,6 +8511,42 @@ class KanColleConstant
         }
       end,
     },
+    485 => {
+      :name => @data.find { |x| x["id"] == 485 }["name"],
+      :map => @data.find { |x| x["id"] == 485 }["image"],
+      :cells => @data.find { |x| x["id"] == 485 }["cells"].filter { |x, y| y["name"] != nil }.map do |x, y|
+        {
+          :name => y["name"],
+          :point => x.to_sym,
+          :boss => y["boss"],
+          :index => y["routes"],
+        }
+      end,
+    },
+    486 => {
+      :name => @data.find { |x| x["id"] == 486 }["name"],
+      :map => @data.find { |x| x["id"] == 486 }["image"],
+      :cells => @data.find { |x| x["id"] == 486 }["cells"].filter { |x, y| y["name"] != nil }.map do |x, y|
+        {
+          :name => y["name"],
+          :point => x.to_sym,
+          :boss => y["boss"],
+          :index => y["routes"],
+        }
+      end,
+    },
+    487 => {
+      :name => @data.find { |x| x["id"] == 487 }["name"],
+      :map => @data.find { |x| x["id"] == 487 }["image"],
+      :cells => @data.find { |x| x["id"] == 487 }["cells"].filter { |x, y| y["name"] != nil }.map do |x, y|
+        {
+          :name => y["name"],
+          :point => x.to_sym,
+          :boss => y["boss"],
+          :index => y["routes"],
+        }
+      end,
+    },
   }
 
   def self.map

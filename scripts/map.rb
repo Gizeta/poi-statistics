@@ -94,7 +94,7 @@ def get_map_cell(id)
   b.join("")
 end
 
-[481, 482, 483, 484].each do |map_id|
+[485, 486, 487].each do |map_id|
   File.open("./#{map_id}.json", "w") do |file|
     file.write(%Q{---
 layout: json
