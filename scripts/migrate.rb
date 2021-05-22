@@ -127,7 +127,7 @@ pool[:map].each do |map_id|
 end
 
 # event
-pool = { map: [485,486,487], name: "t" }
+pool = { map: [501, 502, 503], name: "t" }
 pool[:map].each do |map_id|
   KanColleConstant.map[map_id][:cells].each do |cell_obj|
     cell_obj[:index].each do |cell_id|
