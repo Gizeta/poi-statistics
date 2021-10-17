@@ -3,7 +3,7 @@
     %h1 开发统计
   %div.col-xs-12
     %div.panel-group
-      - slotitem_list = JSON.parse(get_kv_data("development_itemlist")).map{|s| ConstData.slotitem[s]}
+      - slotitem_list = JSON.parse(get_kv_data("development_itemlist")).select{|s| s>0}.map{|s| ConstData.slotitem[s]}.reject {|x| x.nil?}
       %div.panel.panel-primary
         %div.panel-heading
           %h4.panel-title 主炮、副炮

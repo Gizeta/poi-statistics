@@ -14,7 +14,7 @@ class KanColleConstant
     },
     7 => {
       :name => "南西海域",
-      :maps => [71, 72],
+      :maps => [71, 72, 73],
     },
     4 => {
       :name => "西方海域",
@@ -131,6 +131,11 @@ class KanColleConstant
     50 => {
       :name => "激突！ルンガ沖夜戦",
       :maps => [501, 502, 503, 504, 505],
+      :event => true,
+    },
+    51 => {
+      :name => "増援輸送作戦！地中海の戦い",
+      :maps => [511, 512, 513],
       :event => true,
     },
   }

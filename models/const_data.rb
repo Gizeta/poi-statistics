@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 class ConstData
   class ShipData
@@ -9,13 +9,16 @@ class ConstData
     def [](index)
       ret = nil
       if index == -1 || index == 0
-        ret =  {"name" => "(无)"}
+        ret = { "name" => "(无)" }
       elsif index.is_a? Numeric
-        ret = @data.find{|i| i["id"] == index}
+        ret = @data.find { |i| i["id"] == index }
       elsif index.is_a? String
-        ret = @data.find{|i| i["name"] == index || "#{i["name"]}#{i["yomi"] || ""}" == index}
+        if index == "宗谷"
+          return @data.find { |i| i["id"] == 699 }
+        end
+        ret = @data.find { |i| i["name"] == index || "#{i["name"]}#{i["yomi"] || ""}" == index }
       end
-      return ret.nil? ? {"name" => "未知(#{index})"} : ret
+      return ret.nil? ? { "name" => "未知(#{index})" } : ret
     end
   end
 
@@ -27,11 +30,11 @@ class ConstData
     def [](index)
       ret = nil
       if index.is_a? Numeric
-        ret = @data.find{|i| i["id"] == index}
+        ret = @data.find { |i| i["id"] == index }
       elsif index.is_a? String
-        ret = @data.find{|i| i["name"] == index}
+        ret = @data.find { |i| i["name"] == index }
       end
-      return ret.nil? ? {"name" => "未知(#{index})"} : ret
+      return ret.nil? ? { "name" => "未知(#{index})" } : ret
     end
   end
 
@@ -41,8 +44,8 @@ class ConstData
     end
 
     def [](index)
-      ret = @data.find{|i| i["id"] == index}
-      return ret.nil? ? {"name" => "未知(#{index})"} : ret
+      ret = @data.find { |i| i["id"] == index }
+      return ret.nil? ? { "name" => "未知(#{index})" } : ret
     end
   end
 
@@ -54,11 +57,11 @@ class ConstData
     def [](index)
       ret = nil
       if index.is_a? Numeric
-        ret = @data.find{|i| i["id"] == index}
+        ret = @data.find { |i| i["id"] == index }
       elsif index.is_a? String
-        ret = @data.find{|i| i["name"] == index}
+        ret = @data.find { |i| i["name"] == index }
       end
-      return ret.nil? ? {"name" => "未知(#{index})"} : ret
+      return ret.nil? ? { "name" => "未知(#{index})" } : ret
     end
   end
 
@@ -70,11 +73,11 @@ class ConstData
     def [](index)
       ret = nil
       if index.is_a? Numeric
-        ret = @data.find{|i| i["id"] == index}
+        ret = @data.find { |i| i["id"] == index }
       elsif index.is_a? String
-        ret = @data.find{|i| i["name"] == index}
+        ret = @data.find { |i| i["name"] == index }
       end
-      return ret.nil? ? {"name" => "未知(#{index})"} : ret
+      return ret.nil? ? { "name" => "未知(#{index})" } : ret
     end
   end
 

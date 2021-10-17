@@ -11,7 +11,7 @@ Mongoid.load!("#{path}/config/mongoid.yml", :production)
 Dir["#{path}/models/*.rb"].each { |file| load file }
 
 $mapData = Fiber.new do
-	open("./final_compressed.json") do |u|
+  open("./final_compressed.json") do |u|
     d = JSON.parse(u.readlines[0])
     Fiber.yield d
   end
@@ -94,7 +94,7 @@ def get_map_cell(id)
   b.join("")
 end
 
-[501,502,503].each do |map_id|
+[513].each do |map_id|
   File.open("./#{map_id}.json", "w") do |file|
     file.write(%Q{---
 layout: json
@@ -104,7 +104,7 @@ data:
   name: #{get_map_name(map_id)}
   routes:#{get_map_route(map_id)}
   cells:#{get_map_cell(map_id)}
-  image: MapHDE-#{map_id % 10}Spring2021.png
+  image: MapHDE-#{map_id % 10}Summer2021.png
 ---
 })
   end
