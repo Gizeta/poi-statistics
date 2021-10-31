@@ -93,7 +93,10 @@
                   %a{:class => "list-group-item#{map_id == m_id ? ' active' : ''}",
                      :href => "/drop/map/#{m_id}/"}= "#{KanColleConstant.map[m_id][:name]} (#{m_id.to_s.insert(-2, '-')})"
 %script{:src => "//static.kcwiki.org/db/scripts/drop/constant.js"}
-%script{:src => "//static.kcwiki.org/db/scripts/drop/map.js"}
+- if map_id > 520
+  %script{:src => "/scripts/drop/map2.js"}
+- else
+  %script{:src => "//static.kcwiki.org/db/scripts/drop/map.js"}
 %script
   :plain
     $(document).ready(function() {

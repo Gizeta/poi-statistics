@@ -138,6 +138,11 @@ class KanColleConstant
       :maps => [511, 512, 513],
       :event => true,
     },
+    52 => {
+      :name => "帰ってきた鎮守府秋刀魚祭り",
+      :maps => [521],
+      :event => true,
+    },
   }
 
   def self.area

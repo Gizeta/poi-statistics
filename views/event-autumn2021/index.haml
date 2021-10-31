@@ -1,0 +1,40 @@
+%div.container
+  %div.page-header
+    %h1 2021年秋刀鱼祭典
+  %div.panel.panel-primary
+    %div.panel-heading
+      %h4.panel-title 秋刀鱼
+    %div.panel-body
+      %table.table.table-striped.table-hover{:style => "text-align:center;"}
+        %thead
+          %tr
+            %td 海域点
+            %td S胜掉落次数
+            %td S胜掉落率
+            %td A胜掉落次数
+            %td A胜掉落率
+            %td S&amp;A胜掉落率
+        %tbody
+:javascript
+  function rate(count, total) {
+    return total == 0 ? 0 : (count * 100 / total).toFixed(3)
+  }
+  $.getJSON('/api/cache/drop_item_68', function(obj) {
+    var table = $('table tbody');
+    console.log(obj)
+    items = [];
+    $.each(obj.data, function(key, val) {
+      items.push([key, val.s_count, rate(val.s_count, val.s_total), val.a_count, rate(val.a_count, val.a_total), rate(val.s_count + val.a_count, val.s_total + val.a_total)])
+    });
+    items.sort(function(a, b) {
+      if (a[2] != b[2]) return b[2] - a[2];
+      if (a[4] != b[4]) return b[4] - a[4];
+      return b[5] - a[5];
+    });
+    table.html(items.map(function(x) {
+      return "<tr><td>"+x.join("</td><td>")+"</td></tr>";
+    }));
+  }).fail(function() {
+    alert('Failed to get data');
+  });
+=haml :disqus, :locals => { :key => "event-autumn2021/index" }
