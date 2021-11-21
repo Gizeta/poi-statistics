@@ -140,7 +140,7 @@ class KanColleConstant
     },
     52 => {
       :name => "帰ってきた鎮守府秋刀魚祭り",
-      :maps => [521],
+      :maps => [521, 522, 523],
       :event => true,
     },
   }

@@ -2,6 +2,4 @@ config/puma.rb
 config/mongoid.yml
 config/environments.rb
 data/*.json
-public/**/*.html
-public/**/*.json
 scripts/*.sh

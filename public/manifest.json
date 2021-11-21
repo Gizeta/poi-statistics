@@ -1,0 +1,8 @@
+{
+  "name": "poi-statistics (powered by 舰娘百科 × poi)",
+  "short_name": "poi-statistics",
+  "start_url": "/",
+  "display": "standalone",
+  "gcm_sender_id": "206363198678",
+  "gcm_user_visible_only": true
+}

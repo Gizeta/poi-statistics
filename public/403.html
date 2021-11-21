@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+  <meta charset="UTF-8">
+  <title>tty1</title>
+  <link rel="stylesheet" media="all" href="//cdn.rawgit.com/SDA/terminal/master/dist/terminal-1.0.0.min.css"/>
+</head>
+<body>
+  <div id="terminal"></div>
+  <script src="//cdn.rawgit.com/SDA/terminal/master/dist/terminal-1.0.0.min.js"></script>
+  <script>
+    var terminal = new Terminal('terminal', {welcome: [
+        "             _           _        _   _     _   _",
+        " _ __   ___ (_)      ___| |_ __ _| |_(_)___| |_(_) ___ ___",
+        "| '_ \\ / _ \\| |_____/ __| __/ _` | __| / __| __| |/ __/ __|",
+        "| |_) | (_) | |_____\\__ \\ || (_| | |_| \\__ \\ |_| | (__\\__ \\",
+        "| .__/ \\___/|_|     |___/\\__\\__,_|\\__|_|___/\\__|_|\\___|___/",
+        "|_|",
+        "",
+        "",
+        "[12450] Puma starting in cluster mode...",
+        "[12450] * Version 2.15.3 (ruby 2.3.0-p0), codename: Autumn Arbor Airbrush",
+        "[12450] * Phased restart available",
+        "[12450] Use Ctrl-C to stop",
+        "[37564] + Gemfile in context: /var/www/poi-statistics/Gemfile",
+        "/var/www/poi-statistics/app.rb:19:in `initialize': Operation not permitted @ rb_sysopen - /var/www/poi-statistics" + location.pathname + " (Errno::EPERM)",
+        "        from /var/www/poi-statistics/app.rb:19:in `open'",
+        "        from /var/www/poi-statistics/app.rb:19:in `<top (required)>'",
+        "        from /usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:55:in `require'",
+        "        from /usr/lib/ruby/2.3.0/lib/ruby/gems/2.3.0/gems/rack-1.6.4/lib/rack/builder.rb:55:in `initialize'",
+        "        from config.ru:in `&lt;main&gt;'",
+        "        from /usr/lib/ruby/2.3.0/lib/ruby/gems/2.3.0/gems/puma-2.15.3/lib/puma/configuration.rb:144:in `load_rackup'",
+        "        from /usr/lib/ruby/2.3.0/lib/ruby/gems/2.3.0/gems/puma-2.15.3/lib/puma/runner.rb:130:in `start_server'",
+        "        from /usr/lib/ruby/2.3.0/lib/ruby/gems/2.3.0/gems/puma-2.15.3/lib/puma/cluster.rb:109:in `fork'",
+        "        from /usr/lib/ruby/2.3.0/lib/ruby/gems/2.3.0/gems/puma-2.15.3/lib/puma/cluster.rb:105:in `spawn_workers'",
+        "        from /usr/lib/ruby/2.3.0/lib/ruby/gems/2.3.0/gems/puma-2.15.3/lib/puma/cli.rb:215:in `run'",
+        "        from /usr/lib/ruby/2.3.0/bin/puma:23:in `load'",
+        "        from /usr/lib/ruby/2.3.0/bin/puma:23:in `&lt;main&gt;'"
+      ].join('<br/>').replace(/ /g, '&nbsp;'),
+      prompt: "nobody:/var/www/poi-statistics",
+      separator: "#"
+    }, {
+      execute: function(cmd, args) {
+        switch (cmd) {
+          case "clear":
+            terminal.clear();
+            return '';
+          case "help":
+            return "Commands: cat, clear, help, ls";
+          default:
+            return false;
+        }
+      }
+    }, {
+      execute: function(cmd, args) {
+        switch (cmd) {
+          case "ls":
+            return "haruka.txt";
+          case "cat":
+            if (args && args[0]) {
+              if (args.length > 1) return 'Too many arguments';
+              else {
+                switch (args[0]) {
+                  case "haruka.txt":
+                    return '<font style=\'font-family:Mona,"MS PGothic AA","ＭＳ Ｐゴシック","MS PGothic","MS Pｺﾞｼｯｸ","MS Pゴシック","ＭＳＰゴシック","MSPゴシック","IPA モナー Pゴシック","IPA mona PGothic","IPA MONAPGOTHIC",IPAMonaPGothic,Textar,Kuma_Lite,sans-serif\'>' + [
+                      "　　　　　　　　　　　　　　　　　　　　　　　　　,. - \"~￣￣~｀`'丶、",
+                      "　　　　　　　　　　　　　　　　　　　　　　 ／　　　,　　　｀´　、　　｀丶",
+                      "　　　　　　　　　　　　　　　　　　　　　／　　 ／　　　 ´ 、　 ヽ.　　　 ＼",
+                      "　　　　　　　　　　　　　　　　　　 　 /　　　/　　　　　　　;　　　 ヽ　　　 ',",
+                      "　　　　　　　　　　　　　　　　　　　/　　　/　　　,/ ,　　　i　　　　　ヽ　　　',",
+                      "　　　　　　　　　　　　　　　　　　 ,'　　　/　　　/　,l　 　 ,' ﾄ　 　 　　丶　　'",
+                      "　　　　　　　　　　　　　　　　　　,'　 ,. /l^i　　　/ /l 　 ´ 　lヽ　　　　　',　　ｌ",
+                      "　　　　　　　　　　　　　　　　 ,、,'　 ', -' '、 ﾉ-‐/‐ﾄ　　　 ,' _ヽ ,、　　　',　　l",
+                      "　　　　　　　　　　　　　　　　 !,'廴,=i・_,’ﾉ'　/,/　 | 　　, / 　｀\";ト　　　 ',　 ｌ",
+                      "　　　　　　　　　　　　　　　　　ｿ\"´/｀\"´　/ノ　_ .'l　 ノ/ 　　　', |',　　　　　|",
+                      "　　　　　,--、　　　　 　　　　ノ　 /　　　/ ,x===:、! '\"´　　‐　 l'　',　　　.　l",
+                      "　　　　/　　 l　　　　 　　　//'　,/, i　　/', ´　　　 　　　　 '\"\"''ヾ、 ', i　　　l",
+                      ".　　　 ｌ　 i　 l　　　　　 　 ｌi　i　i /ｌ　/ ヽ:,　　　　　　'　　　　　　 /,.l|l　 ＿l",
+                      "　　　__!.,i\"'_'ヽ　　　　　　 ヽ ｌ　l　 l　i　　 '.、　　 l\"￣ﾞヽ　　　　/,ノ, '\"- 、｀ヽ",
+                      "　／　　 ゞｰ''iヽ、　　　　　 　i　li '、 l /　 ノlヽ.、 ヽ.__ノ　　　,ノ　,'　l:;:;:;:;:;:l＿,.!‐-、",
+                      "´　　　　｀｀´　　ヽ　　　　　　 ヾ、ヽ=ヾｔ'i　 l　 l｀丶 - ‐ ''\"l、 l　 !ﾉ ＞　　　　　　　｀丶、",
+                      "　　　　　　 　　,-.｀l　　　　　　　ヾ,'_ノノ ',,.. ヽ/｀ ,.-ｰ‐‐'\"\" ヽ,、_,/:　　　　　　　　　　　 、´\"ヽ,",
+                      ".　　 　　　●　 l 、ヽ　　　　　　　/ ,/　／ヽ、!_´-ー--─ \"'　,.--!　　　ο　　　　　 　 　', 　 　l",
+                      "　　　● ’ノ 　｀.、　l 　 　 　 　 / /　/　 / ”/／/‐‐,=,、, _,、l　　 ',　　,.--。ο　　　 　 　l 　　l",
+                      "ヽ　,-‐、　　,.,_'\" ｀-iヽ、　　　 /　'　/　／\"/'　 /--,/,、ｌ　 　,..!　　人 l　 ﾍ　ヽ　　　　　　l___ノ"
+                    ].join("<br/>") + "</font>";
+                  default:
+                    return "cat: " + args[0] + ": No such file or directory";
+                }
+              }
+            }
+            return '';
+          default:
+            return false;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
