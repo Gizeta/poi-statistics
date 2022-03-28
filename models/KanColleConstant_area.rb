@@ -145,7 +145,7 @@ class KanColleConstant
     },
     53 => {
       :name => "発令！「捷三号作戦警戒」",
-      :maps => [531, 532, 533],
+      :maps => [531, 532, 533, 534, 535],
       :event => true,
     },
   }
