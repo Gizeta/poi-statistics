@@ -16,7 +16,8 @@ function loadData(query) {
         bCount: val.rankCount ? val.rankCount[2] : 0,
         hqLvRange: val.hqLv.join(' ~ '),
         dropRate: val.rate,
-        enemyData: val.enemy
+        enemyData: val.enemy,
+        ownData: val.own
       });
     });
     items.sort(function(a, b) {
@@ -87,6 +88,18 @@ function detailFormatter(index, row) {
       }
       html.push("<span>" + value.rate + "%</span></div>");
     });
+    html.push("</div>")
+
+    html.push("<div class='table-like'>");
+    html.push("<div><span>多号机掉率</span>");
+    html.push("<span>数量</span>");
+    html.push("<span>掉落率</span></div>");
+
+    for (var i = 0; i < Object.keys(row.ownData).length; i++) {
+      html.push("<div><span>" + i + " -> " + (i+1) + "</span>");
+      html.push("<span>" + row.ownData[i]["count"] + "</span>");
+      html.push("<span>" + (row.ownData[i]["total"] == 0 ? 0 : (row.ownData[i]["count"] * 100 / row.ownData[i]["total"])).toFixed(3) + "%</span></div>");
+    }
     html.push("</div>")
 
     return html.join('');
