@@ -14,7 +14,7 @@
               %a{:href => "#area2", :"data-toggle" => "tab"} 南西諸島海域
             %li
               %a{:href => "#area3", :"data-toggle" => "tab"} 北方海域
-            %li
+            %li.active
               %a{:href => "#area7", :"data-toggle" => "tab"} 南西海域
             %li
               %a{:href => "#area4", :"data-toggle" => "tab"} 西方海域
@@ -28,7 +28,7 @@
               %a{:href => "#area53", :"data-toggle" => "tab"} 発令！「捷三号作戦警戒」
             %li
               %a{:href => "#area54", :"data-toggle" => "tab"} 激闘！R方面作戦
-            %li.active
+            %li
               %a{:href => "#area55", :"data-toggle" => "tab"} 激闘！R方面作戦大規模反攻上陸！トーチ作戦！
           %div.tab-content.top15
             %div#area1.tab-pane
@@ -148,7 +148,7 @@
                 %div.row
                   %a{:href => "/drop/map/65"}
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHD6-5.png"), :alt => "MapBannerHD6-5.png"}
-            %div#area7.tab-pane
+            %div#area7.tab-pane.active
               %div.col-xs-12
                 %div.row
                   %div.col-xs-6.col-no-padding
@@ -164,6 +164,9 @@
                   %div.col-xs-6.col-no-padding
                     %a{:href => "/drop/map/74"}
                       %img.img-responsive.block-right{:src => kcwiki_get_file("MapBannerHD7-4.png"), :alt => "MapBannerHD7-4.png"}
+                %div.row
+                  %a{:href => "/drop/map/75/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHD7-5.png"), :alt => "MapBannerHD7-5.png"}
             %div#area52.tab-pane
               %div.col-xs-12
                 %div.row
@@ -199,7 +202,7 @@
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-4Spring2022.png"), :alt => "MapBannerHDE-4Spring2022.png"}
                   %a{:href => "/drop/map/545/"}
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-5Spring2022.png"), :alt => "MapBannerHDE-5Spring2022.png"}
-            %div#area55.tab-pane.active
+            %div#area55.tab-pane
               %div.col-xs-12
                 %div.row
                   %a{:href => "/drop/map/551/"}
@@ -208,6 +211,12 @@
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-2Summer2022.png"), :alt => "MapBannerHDE-2Summer2022.png"}
                   %a{:href => "/drop/map/553/"}
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-3Summer2022.png"), :alt => "MapBannerHDE-3Summer2022.png"}
+                  %a{:href => "/drop/map/554/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-4Summer2022.png"), :alt => "MapBannerHDE-4Summer2022.png"}
+                  %a{:href => "/drop/map/555/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-5Summer2022.png"), :alt => "MapBannerHDE-5Summer2022.png"}
+                  %a{:href => "/drop/map/556/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-6Summer2022.png"), :alt => "MapBannerHDE-6Summer2022.png"}
   %div.col-xs-12.col-md-6
     %div.panel-group
       %div.panel.panel-primary
@@ -298,3 +307,10 @@
                   %li
                     %p
                       %a.btn.btn-default{:href => "/drop/ship/#{ship["id"]}"}= ship["name"]
+:javascript
+  window.showLimitedTimeDrop = function(list) {
+    document.getElementById('new').innerHTML = '<ul class="list-inline">' + list.map(function(item) {
+      return '<li><p><a class="btn btn-default" href="/drop/ship/' + item.id + '">' + item.name + '</a></p></li>'
+    }).join('') + '</ul>';
+  };
+%script{:src => "https://zh.kcwiki.cn/index.php?title=MediaWiki:Gadget-LimitedTimeDrop.js&action=raw&ctype=text/javascript"}

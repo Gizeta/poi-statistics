@@ -14,7 +14,7 @@ class KanColleConstant
     },
     7 => {
       :name => "南西海域",
-      :maps => [71, 72, 73, 74],
+      :maps => [71, 72, 73, 74, 75],
     },
     4 => {
       :name => "西方海域",
@@ -155,7 +155,7 @@ class KanColleConstant
     },
     55 => {
       :name => "大規模反攻上陸！トーチ作戦！",
-      :maps => [551, 552, 553],
+      :maps => [551, 552, 553, 554, 555, 556],
       :event => true,
     },
   }

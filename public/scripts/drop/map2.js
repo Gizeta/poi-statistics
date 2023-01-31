@@ -90,17 +90,19 @@ function detailFormatter(index, row) {
     });
     html.push("</div>")
 
-    html.push("<div class='table-like'>");
-    html.push("<div><span>多号机掉率</span>");
-    html.push("<span>数量</span>");
-    html.push("<span>掉落率</span></div>");
-
-    for (var i = 0; i < Object.keys(row.ownData).length; i++) {
-      html.push("<div><span>" + i + " -> " + (i+1) + "</span>");
-      html.push("<span>" + row.ownData[i]["count"] + "</span>");
-      html.push("<span>" + (row.ownData[i]["total"] == 0 ? 0 : (row.ownData[i]["count"] * 100 / row.ownData[i]["total"])).toFixed(3) + "%</span></div>");
+    if (window.MAP_ID && window.MAP_ID > 72) {
+      html.push("<div class='table-like'>");
+      html.push("<div><span>多号机掉率</span>");
+      html.push("<span>数量</span>");
+      html.push("<span>掉落率</span></div>");
+  
+      for (var i = 0; i < Object.keys(row.ownData).length; i++) {
+        html.push("<div><span>" + i + " -> " + (i+1) + "</span>");
+        html.push("<span>" + row.ownData[i]["count"] + "</span>");
+        html.push("<span>" + (row.ownData[i]["total"] == 0 ? 0 : (row.ownData[i]["count"] * 100 / row.ownData[i]["total"])).toFixed(3) + "%</span></div>");
+      }
+      html.push("</div>")
     }
-    html.push("</div>")
 
     return html.join('');
 }

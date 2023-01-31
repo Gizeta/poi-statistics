@@ -6,6 +6,10 @@
       - slotitem_list = JSON.parse(get_kv_data("development_itemlist")).select{|s| s>0}.map{|s| ConstData.slotitem[s]}.reject {|x| x.nil?}
       %div.panel.panel-primary
         %div.panel-heading
+          %h4.panel-title 新实装
+        %div#new.panel-body
+      %div.panel.panel-primary.top15
+        %div.panel-heading
           %h4.panel-title 主炮、副炮
         %div.panel-body
           %ul.list-inline
@@ -67,3 +71,10 @@
               %li
                 %p
                   %a.btn.btn-default{:href => "/development/item/#{s["id"]}.html"}= s["name"]
+:javascript
+  window.showWikiRecommended = function(list) {
+    document.getElementById('new').innerHTML = '<ul class="list-inline">' + list.map(function(item) {
+      return '<li><p><a class="btn btn-default" href="/development/item/' + item.id + '">' + item.name + '</a></p></li>'
+    }).join('') + '</ul>';
+  };
+%script{:src => "https://zh.kcwiki.cn/index.php?title=MediaWiki:Gadget-NewEquipmentDevelopment.js&action=raw&ctype=text/javascript"}
