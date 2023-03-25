@@ -158,6 +158,11 @@ class KanColleConstant
       :maps => [551, 552, 553, 554, 555, 556],
       :event => true,
     },
+    56 => {
+      :name => "絶対防衛線！「小笠原兵団」救援",
+      :maps => [561, 562, 563, 564, 565, 566],
+      :event => true,
+    },
   }
 
   def self.area

@@ -97,8 +97,8 @@
 / %script{:src => "//static.kcwiki.org/db/scripts/drop/map.js"}
 %script
   :plain
+    window.MAP_ID = #{map_id};
     $(document).ready(function() {
-      window.MAP_ID = #{map_id};
       loadData({id: #{map_id}, point: "#{point_id}", rank: "#{rank}", level: #{locals[:level_no] || 0}});
     });
 =haml :disqus, :locals => { :key => "drop/map/#{map_id}" }
