@@ -30,8 +30,10 @@
               %a{:href => "#area54", :"data-toggle" => "tab"} 激闘！R方面作戦
             %li
               %a{:href => "#area55", :"data-toggle" => "tab"} 激闘！R方面作戦大規模反攻上陸！トーチ作戦！
-            %li.active
+            %li
               %a{:href => "#area56", :"data-toggle" => "tab"} 絶対防衛線！「小笠原兵団」救援
+            %li.active
+              %a{:href => "#area57", :"data-toggle" => "tab"} 船団護衛！輸送航路防衛戦
           %div.tab-content.top15
             %div#area1.tab-pane
               %div.col-xs-12
@@ -219,7 +221,7 @@
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-5Summer2022.png"), :alt => "MapBannerHDE-5Summer2022.png"}
                   %a{:href => "/drop/map/556/"}
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-6Summer2022.png"), :alt => "MapBannerHDE-6Summer2022.png"}
-            %div#area56.tab-pane.active
+            %div#area56.tab-pane
               %div.col-xs-12
                 %div.row
                   %a{:href => "/drop/map/561/"}
@@ -234,6 +236,23 @@
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-5Spring2023.png"), :alt => "MapBannerHDE-5Spring2023.png"}
                   %a{:href => "/drop/map/566/"}
                     %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-6Spring2023.png"), :alt => "MapBannerHDE-6Spring2023.png"}
+            %div#area57.tab-pane.active
+              %div.col-xs-12
+                %div.row
+                  %a{:href => "/drop/map/571/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-1Summer2023.png"), :alt => "MapBannerHDE-1Summer2023.png"}
+                  %a{:href => "/drop/map/572/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-2Summer2023.png"), :alt => "MapBannerHDE-2Summer2023.png"}
+                  %a{:href => "/drop/map/573/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-3Summer2023.png"), :alt => "MapBannerHDE-3Summer2023.png"}
+                  %a{:href => "/drop/map/574/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-4Summer2023.png"), :alt => "MapBannerHDE-4Summer2023.png"}
+                  %a{:href => "/drop/map/575/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-5Summer2023.png"), :alt => "MapBannerHDE-5Summer2023.png"}
+                  %a{:href => "/drop/map/576/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-6Summer2023.png"), :alt => "MapBannerHDE-6Summer2023.png"}
+                  %a{:href => "/drop/map/577/"}
+                    %img.img-responsive.block-center{:src => kcwiki_get_file("MapBannerHDE-7Summer2023.png"), :alt => "MapBannerHDE-7Summer2023.png"}
   %div.col-xs-12.col-md-6
     %div.panel-group
       %div.panel.panel-primary
@@ -247,6 +266,8 @@
             %li
               %a{:href => "#cl", :"data-toggle" => "tab"} 轻巡、练巡
             %li
+              %a{:href => "#de", :"data-toggle" => "tab"} 海防舰
+            %li
               %a{:href => "#ca", :"data-toggle" => "tab"} 重巡
             %li
               %a{:href => "#bb", :"data-toggle" => "tab"} 战舰
@@ -259,7 +280,7 @@
             %li
               %a{:href => "#others", :"data-toggle" => "tab"} 其他
             %li.active
-              %a{:href => "#new", :"data-toggle" => "tab"} 新实装、活动限定
+              %a{:href => "#new", :"data-toggle" => "tab"} 活动新船
           %div.tab-content.top15
             %div#dd.tab-pane
               %ul.list-inline
@@ -271,6 +292,13 @@
             %div#cl.tab-pane
               %ul.list-inline
                 - ship_list.select{|s| s["stype"] == 3 || s["stype"] == 21}.group_by{|s| s["ctype"]}.each do |grp, ships|
+                  - ships.sort{|a, b| a["wiki_id"] <=> b["wiki_id"]}.each do |s|
+                    %li
+                      %p
+                        %a.btn.btn-default{:href => "/drop/ship/#{s["id"]}/"}= s["name"]
+            %div#de.tab-pane
+              %ul.list-inline
+                - ship_list.select{|s| s["stype"] == 1}.group_by{|s| s["ctype"]}.each do |grp, ships|
                   - ships.sort{|a, b| a["wiki_id"] <=> b["wiki_id"]}.each do |s|
                     %li
                       %p
@@ -312,7 +340,7 @@
                         %a.btn.btn-default{:href => "/drop/ship/#{s["id"]}/"}= s["name"]
             %div#others.tab-pane
               %ul.list-inline
-                - ship_list.select{|s| ![(2..14).to_a, 18, 21].flatten.include?(s["stype"])}.group_by{|s| s["ctype"]}.each do |grp, ships|
+                - ship_list.select{|s| ![(1..14).to_a, 18, 21].flatten.include?(s["stype"])}.group_by{|s| s["ctype"]}.each do |grp, ships|
                   - ships.sort{|a, b| a["wiki_id"] <=> b["wiki_id"]}.each do |s|
                     %li
                       %p
