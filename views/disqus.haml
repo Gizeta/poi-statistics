@@ -51,20 +51,21 @@
     unicode:'1f60f'
   }];
 
-  var disq = new iDisqus('comment', {
-    forum: 'poi-statistics',
-    url: '#{key}',
-    site: 'https://db.kcwiki.org',
-    api: 'https://disqus.kcwiki.cn/api',
-    mode: 2,
-    timeout: 3000,
-    init: true,
-    emoji_list: emojiList,
-    emoji_preview: true,
-    auto: true
-  });
-:javascript
-  document.getElementsByClassName("comment-form-url")[0].style.display = 'none';
+  if (window.MAP_ID && window.MAP_ID > 560) {
+    var disq = new iDisqus('comment', {
+      forum: 'poi-statistics',
+      url: '#{key}',
+      site: 'https://db.kcwiki.org',
+      api: 'https://disqus.kcwiki.cn/api',
+      mode: 2,
+      timeout: 3000,
+      init: true,
+      emoji_list: emojiList,
+      emoji_preview: true,
+      auto: true
+    });
+    document.getElementsByClassName("comment-form-url")[0].style.display = 'none';
+  }
 
 -# %div.container.top15{:style => "padding: 0 15%"}
 -#   %div 因网站技术升级，从即日起至6月6日网站将暂时关闭评论功能。

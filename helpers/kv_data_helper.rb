@@ -1,8 +1,24 @@
 require 'sinatra/base'
+require 'uri'
+require 'net/http'
 
 module Sinatra
   module KVDataHelper
     def self.get_kv_data(key)
+      # oops! this looks so dangerous
+      if key == 'development_itemlist'
+        uri = URI('http://127.0.0.1:37566/api/cache/development_item_list')
+        res = Net::HTTP.get_response(uri)
+        if res.is_a?(Net::HTTPSuccess)
+          return res.body
+        end
+      elsif key == 'drop_shiplist'
+        uri = URI('http://127.0.0.1:37566/api/cache/drop_shiplist')
+        res = Net::HTTP.get_response(uri)
+        if res.is_a?(Net::HTTPSuccess)
+          return res.body
+        end
+      end
       return nil unless KVData.exists?(:key => key)
       KVData.where(:key => key).take.value
     end
