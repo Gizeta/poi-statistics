@@ -175,7 +175,7 @@ class KanColleConstant
     },
     59 => {
       :name => "Operation Menace/新MO作戦",
-      :maps => [591, 592, 593],
+      :maps => [591, 592, 593, 594, 595],
       :event => true,
     },
   }

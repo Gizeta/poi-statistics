@@ -9195,6 +9195,30 @@ class KanColleConstant
         }
       end,
     },
+    594 => {
+      :name => @data.find { |x| x["id"] == 594 }["name"],
+      :map => @data.find { |x| x["id"] == 594 }["image"],
+      :cells => @data.find { |x| x["id"] == 594 }["cells"].filter { |x, y| y["name"] != nil }.map do |x, y|
+        {
+          :name => y["name"],
+          :point => x.to_sym,
+          :boss => y["boss"],
+          :index => y["routes"],
+        }
+      end,
+    },
+    595 => {
+      :name => @data.find { |x| x["id"] == 595 }["name"],
+      :map => @data.find { |x| x["id"] == 595 }["image"],
+      :cells => @data.find { |x| x["id"] == 595 }["cells"].filter { |x, y| y["name"] != nil }.map do |x, y|
+        {
+          :name => y["name"],
+          :point => x.to_sym,
+          :boss => y["boss"],
+          :index => y["routes"],
+        }
+      end,
+    },
   }
 
   def self.map
