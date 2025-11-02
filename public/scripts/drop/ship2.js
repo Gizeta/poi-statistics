@@ -23,7 +23,7 @@ function loadData(query) {
 
     table.bootstrapTable().bootstrapTable('append', items);
 
-    $('#cache-time').html(obj.generateTime);
+    $('#cache-time').html(obj.timeRange[0].split(' ')[0] + ' ~ ' + obj.timeRange[1].split(' ')[0]);
     $('#query-count').html(obj.totalCount);
     $('.fixed-table-toolbar > div:nth-of-type(2)')
       .append("<a class='btn btn-default' href='https://zh.kcwiki.org/wiki/" +
