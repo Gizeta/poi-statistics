@@ -185,7 +185,7 @@ class KanColleConstant
     },
     61 => {
       :name => "逆転！ナルヴィク攻防戦",
-      :maps => [611,612,613],
+      :maps => [611,612,613,614,615],
       :event => true,
     },
   }
